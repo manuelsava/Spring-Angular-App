@@ -1,0 +1,9 @@
+<div class="row">
+    <div class="col-xs-12">
+        <app-student-item
+            *ngFor="let s of students"
+            [student]="s">
+        </app-student-item>
+    </div>
+</div>
+<app-student-form></app-student-form>

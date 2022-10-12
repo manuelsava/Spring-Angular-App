@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: spring-postgres
+spec:
+  selector:
+    matchLabels:
+      app: spring-postgres
+  template:
+    metadata:
+      labels:
+        app: spring-postgres
+    spec:
+      containers:
+      - name: spring-postgres
+        image: manuelsava/spring-postgres:0.2
+        ports:
+        - containerPort: 8080
+        env:
+          - name: spring.datasource.url
+            valueFrom:
+              configMapKeyRef:
+                name: spring-configmap
+                key: url
+          - name: spring.datasource.username
+            valueFrom:
+              secretKeyRef:
+                name: spring-secret
+                key: user
+          - name: spring.datasource.password
+            valueFrom:
+              secretKeyRef:
+                name: spring-secret
+                key: password
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: spring-postgres-service
+spec:
+  selector:
+    app: spring-postgres
+  type: LoadBalancer
+  ports:
+  - port: 8080
+    targetPort: 8080

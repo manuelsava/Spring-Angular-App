@@ -1,0 +1,23 @@
+<hr>
+<form>
+    <div class="form-group">
+      <label for="name">First name</label>
+      <input type="text" class="form-control" id="firstname" placeholder="Enter name" #firstNameInput>
+    </div>
+    <div class="form-group">
+      <label for="name">Last name</label>
+      <input type="text" class="form-control" id="lastName" placeholder="Enter name" #lastNameInput>
+    </div>
+    <div class="form-group">
+      <label for="university">University</label>
+      <select id="university" class="form-select" aria-label="Select university" #uniInput>
+        <option *ngFor="let u of universities" [value]="u.id">{{ u.name + " (" + u.signature + ")"}}</option>
+      </select>
+    </div>
+    <div class="form-group">
+        <label for="dob">Date of birth</label>
+        <input type="date" class="form-control" id="dob" #dobInput>
+    </div>
+    <button type="submit" class="btn btn-success" style="margin-top: 10px;" (click)="onAddStudent()">Create Student</button>
+</form>
+
