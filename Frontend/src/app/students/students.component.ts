@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Route, Router } from '@angular/router';
 import { StudentsService } from '../services/students.service';
 import { Student } from './student.model';
 
@@ -10,7 +11,7 @@ import { Student } from './student.model';
 export class StudentsComponent implements OnInit {
   selectedStudent!: Student;
 
-  constructor(private studentsService: StudentsService) { }
+  constructor(private studentsService: StudentsService, private router: Router, private route: ActivatedRoute) { }
 
   ngOnInit(): void {
   }

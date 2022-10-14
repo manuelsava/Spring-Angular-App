@@ -11,15 +11,12 @@ import { StudentsService } from 'src/app/services/students.service';
   styleUrls: ['./student-list.component.css']
 })
 export class StudentListComponent implements OnInit {
-  @Output() studentWasSelected = new EventEmitter<Student>();
-  students: Student[] = [
-    //new Student("Manuel", "manuelsava98@gmail.com", new Date("1998-04-14"), 24),
-    //new Student("Greta", "arosiogreta@gmail.com", new Date("1999-07-10"), 23),
-  ];
+  students: Student[] = [];
 
   ngOnInit(): void {}
 
   constructor(public http: HttpClient, private studentService: StudentsService) {
+    this.students = studentService.getStudents();
     this.studentService.studentsLoaded.subscribe(() => {
       this.students = studentService.students;
     })

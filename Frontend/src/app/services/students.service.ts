@@ -10,6 +10,8 @@ export class StudentsService {
     selectedStudent: Student = {} as Student;
     @Output() studentWasSelected = new EventEmitter<Student>();
     @Output() studentsLoaded = new EventEmitter();
+    @Output() studentDeleted = new EventEmitter<boolean>();
+    @Output() studentUpdated = new EventEmitter<boolean>();
 
     constructor(public http: HttpClient) {
         this.loadStudents();
@@ -39,20 +41,54 @@ export class StudentsService {
           }).subscribe(res => {
             if(res) {
                 this.loadStudents();
-            } 
+                this.studentUpdated.emit(true);
+            } else {
+                this.studentUpdated.emit(false);
+            }
         })
     }
 
     updateStudent(student: Student){
-        this.students[student.id!] = student;
+        this.http.post(environment.apiUrl + "/api/v1/student/edit", {
+            "id": student.id,
+            "firstName": student.firstName,
+            "lastName": student.lastName,
+            "dateOfBirth": student.dob
+        }).subscribe(res => {
+            if(res) {
+                this.loadStudents();
+
+            }
+        })
     }
 
-    deleteStudent(studentId: number) {
-        //TODO
+    async deleteStudent(studentId: number) {
+        this.http.delete(environment.apiUrl + "/api/v1/student/delete/" + studentId).subscribe((res) => {
+            if(res) {
+                this.studentDeleted.emit(true);
+                this.loadStudents();
+            } else {
+                this.studentDeleted.emit(false);
+            }
+        });
     }
 
     selectStudent(student: Student) {
         this.selectedStudent = student;
         this.studentWasSelected.emit(student);
+    }
+
+    getStudent(id: number): Student {
+        var entity = {} as Student;
+        this.students.forEach((s) => {
+            if(s.id === id)
+                entity = s;
+        });
+
+        return entity;
+    }
+
+    getStudents() {
+        return this.students;
     }
 }
