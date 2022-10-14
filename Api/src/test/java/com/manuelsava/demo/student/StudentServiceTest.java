@@ -127,4 +127,42 @@ class StudentServiceTest {
         assertThat(argumentCaptor.getValue().getEmail())
                 .isEqualTo("manuel.savà1@students.unimi.it");
     }
+
+    @Test
+    void itShouldUpdateStudent() {
+        Student student = new Student(
+                "Manuel",
+                "Savà",
+                LocalDate.of(1998, 4, 14)
+        );
+
+        University university = new University(
+                "Università degli Studi di Milano",
+                "Via Celoria",
+                "UNIMI"
+        );
+
+        given(universityRepository.findById(university.getId())).willReturn(
+                Optional.of(university)
+        );
+
+        given(studentRepository.findByEmail("manuel.sava@students.unimi.it")).willReturn(
+                Optional.empty()
+        );
+
+        given(studentRepository.save(student)).willReturn(student);
+
+        underTest.enrollStudent(student, university.getId());
+        then(studentRepository).should().save(argumentCaptor.capture());
+
+        assertThat(argumentCaptor.getValue()).isEqualTo(student);
+
+        given(studentRepository.findById(1L)).willReturn(Optional.of(student));
+
+        student.setFirstName("John");
+        student.setLastName("Doe");
+        student.setDateOfBirth(LocalDate.of(1998, 4, 29));
+
+        then(studentRepository).should().save(student);
+    }
 }

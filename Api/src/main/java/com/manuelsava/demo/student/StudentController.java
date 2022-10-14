@@ -53,6 +53,13 @@ public class StudentController {
         studentService.enrollStudent(student, universityId);
     }
 
+    @PostMapping(path = "edit")
+    @ResponseStatus(code = HttpStatus.OK, reason = "UPDATED")
+    public void editStudent(@Valid @RequestBody StudentDTO studentDTO) {
+        Student student = modelMapper.map(studentDTO, Student.class);
+        studentService.editStudent(student);
+    }
+
     @DeleteMapping(path = "delete/{studentId}")
     @ResponseStatus(code = HttpStatus.OK, reason = "DELETED")
     public void deleteStudent(@PathVariable("studentId") Long studentId){

@@ -10,6 +10,7 @@ import com.manuelsava.demo.university.University;
 import com.manuelsava.demo.university.UniversityRepository;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -84,5 +85,24 @@ public class StudentService {
         studentRepository.save(entry);*/
         studentRepository.deleteEnrollment(studentId);
         studentRepository.deleteById(studentId);
+    }
+
+    public void editStudent(Student s) {
+        Optional<Student> studentOptional = studentRepository.findById(s.getId());
+        if(!studentOptional.isPresent())
+            throw new IllegalStateException("Student with id " + s.getId() + " is not present!");
+        Student student = studentOptional.get();
+
+        if(s.getFirstName() != null) {
+            student.setFirstName(s.getFirstName());
+        }
+        if(s.getLastName() != null) {
+            student.setLastName(s.getLastName());
+        }
+        if(s.getDateOfBirth() != null) {
+            student.setDateOfBirth(s.getDateOfBirth());
+        }
+
+        studentRepository.save(student);
     }
 }
